@@ -1,11 +1,13 @@
 .color-container {
   display: flex;
-  gap: 5px;
+  gap: 8px;
+  padding: 5px;
+  justify-content: center;
 }
 
 .color-div {
-  width: 30px;
-  height: 30px;
+  min-width: 20px;
+  min-height: 20px;
   content: "";
   border-radius: 50%;
   transition: all 0.5s;

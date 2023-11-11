@@ -4,7 +4,10 @@ import { nanoid } from "nanoid";
 import "../styles/Note.css";
 
 interface NoteInterface {
-  note: string;
+  notes: {
+    text: string;
+    id: string;
+  }[];
   id: string;
   color: string;
 }
@@ -12,17 +15,40 @@ interface NoteInterface {
 export default function Note() {
   const [notes, setNotes] = useState([
     {
-      note: "Hello World",
+      notes: [
+        {
+          text: "Test",
+          id: nanoid(),
+        },
+      ],
       id: nanoid(),
       color: "#242424",
     },
     {
-      note: "Hello Amanda",
+      notes: [
+        {
+          text: "Test",
+          id: nanoid(),
+        },
+      ],
       id: nanoid(),
       color: "#242424",
     },
     {
-      note: "Hello nova",
+      notes: [
+        {
+          text: "Test",
+          id: nanoid(),
+        },
+        {
+          text: "Test",
+          id: nanoid(),
+        },
+        {
+          text: "Test",
+          id: nanoid(),
+        },
+      ],
       id: nanoid(),
       color: "#242424",
     },
@@ -47,22 +73,88 @@ export default function Note() {
     setNotes(newNotes);
   }
 
+  function handleChange(e: React.FormEvent<HTMLInputElement>, id: string) {
+    const { value } = e.currentTarget;
+    const currentIndex = notes.findIndex(
+      (item) => item.notes.findIndex((innerNote) => innerNote.id === id) !== -1
+    );
+    const updatedNotes = { ...notes[currentIndex] };
+    const innerNotesIndex = updatedNotes.notes.findIndex(
+      (innerNote) => innerNote.id === id
+    );
+    updatedNotes.notes[innerNotesIndex] = {
+      ...updatedNotes.notes[innerNotesIndex],
+      text: value,
+    };
+    const newNotes = [
+      ...notes.slice(0, currentIndex),
+      updatedNotes,
+      ...notes.slice(currentIndex + 1),
+    ];
+    setNotes(newNotes);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>, id: string) {
+    if (e.key == "Enter") {
+      const currentIndex = notes.findIndex((item) => item.id == id);
+      const filtered = notes.find((note) => note.id == id);
+      filtered?.notes.push({ text: "", id: nanoid() });
+      if (filtered) {
+        const newNotes = [
+          ...notes.slice(0, currentIndex),
+          filtered,
+          ...notes.slice(currentIndex + 1),
+        ];
+        setNotes(newNotes);
+      }
+    }
+  }
+
+  function dragHandler(e: React.DragEvent<HTMLDivElement>, id: string) {
+    // const currentIndex = notes.findIndex((note) => note.id == id);
+    // const newNotes = [
+    //   ...notes.slice(0, currentIndex),
+    //   updatedNotes,
+    //   ...notes.slice(currentIndex + 1),
+    // ];
+    // setNotes(newNotes);
+    console.log(id);
+  }
+
+  function dropHandler(e: React.DragEvent<HTMLDivElement>, id: string) {
+    console.log(e);
+  }
+
   useEffect(() => {
     console.log(notes);
   }, [notes]);
 
   return (
-    <div>
+    <div className="note-content">
       {notes &&
         notes.map((note: NoteInterface) => {
           return (
             <div
+              draggable
               key={note.id}
               className="note-container"
               style={{ backgroundColor: note.color }}
             >
-              <input className="note" type="text" value={note.note} />
-              <ColorPicker handleColor={handleColor} id={note.id} />
+              {note.notes.map((item) => (
+                <input
+                  autoFocus
+                  onKeyDown={(e) => handleKeyDown(e, note.id)}
+                  onChange={(e) => handleChange(e, item.id)}
+                  className="note"
+                  key={item.id}
+                  value={item.text}
+                />
+              ))}
+              <ColorPicker
+                handleColor={handleColor}
+                id={note.id}
+                currentColor={note.color}
+              />
             </div>
           );
         })}
