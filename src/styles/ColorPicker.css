@@ -1,0 +1,18 @@
+.color-container {
+  display: flex;
+  gap: 5px;
+}
+
+.color-div {
+  width: 30px;
+  height: 30px;
+  content: "";
+  border-radius: 50%;
+  transition: all 0.5s;
+}
+
+.color-div:hover {
+  cursor: pointer;
+  outline: 1px solid white;
+  transform: scale(1.2);
+}

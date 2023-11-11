@@ -1,0 +1,13 @@
+.note-container {
+  border: 1px solid white;
+}
+
+.note {
+  background-color: transparent;
+  border: none;
+}
+
+.note:focus {
+  border: none;
+  outline: none;
+}
