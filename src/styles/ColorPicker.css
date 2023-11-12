@@ -1,10 +1,19 @@
 .color-container {
+  width: auto;
+  height: 20px;
   display: flex;
   gap: 8px;
   padding: 5px;
   justify-content: center;
 }
 
+.controls {
+  background-color: rgba(128, 128, 128, 0.253);
+  backdrop-filter: saturate(1000%) blur(30px);
+  top: 0;
+  position: sticky;
+  display: flex;
+}
 .color-div {
   min-width: 20px;
   min-height: 20px;

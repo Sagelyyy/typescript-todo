@@ -20,7 +20,6 @@ export default function ColorPicker({
     "#9b59b6",
     "#1abc9c",
     "#e67e22",
-    "#34495e",
     "#2c3e50",
   ];
   return (

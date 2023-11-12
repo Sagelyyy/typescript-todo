@@ -17,42 +17,28 @@ export default function Note() {
     {
       notes: [
         {
-          text: "Test",
+          text: "Hello World",
           id: nanoid(),
         },
       ],
       id: nanoid(),
-      color: "#242424",
-    },
-    {
-      notes: [
-        {
-          text: "Test",
-          id: nanoid(),
-        },
-      ],
-      id: nanoid(),
-      color: "#242424",
-    },
-    {
-      notes: [
-        {
-          text: "Test",
-          id: nanoid(),
-        },
-        {
-          text: "Test",
-          id: nanoid(),
-        },
-        {
-          text: "Test",
-          id: nanoid(),
-        },
-      ],
-      id: nanoid(),
-      color: "#242424",
+      color: "transparent",
     },
   ]);
+
+  function newNote() {
+    const newNote = {
+      notes: [{ text: "", id: nanoid() }],
+      id: nanoid(),
+      color: "#242424",
+    };
+    setNotes([...notes, newNote]);
+  }
+
+  function deleteNote(id: string) {
+    const filtered = notes.filter((note) => note.id !== id);
+    setNotes([...filtered]);
+  }
 
   function handleColor(color: string, id: string) {
     // Find index of the selected note
@@ -131,6 +117,9 @@ export default function Note() {
 
   return (
     <div className="note-content">
+      <span className="add material-symbols-outlined" onClick={() => newNote()}>
+        add
+      </span>
       {notes &&
         notes.map((note: NoteInterface) => {
           return (
@@ -140,6 +129,19 @@ export default function Note() {
               className="note-container"
               style={{ backgroundColor: note.color }}
             >
+              <div className="controls">
+                <ColorPicker
+                  handleColor={handleColor}
+                  id={note.id}
+                  currentColor={note.color}
+                />
+                <span
+                  onClick={() => deleteNote(note.id)}
+                  className="trash material-symbols-outlined"
+                >
+                  close
+                </span>
+              </div>
               {note.notes.map((item) => (
                 <input
                   autoFocus
@@ -150,11 +152,6 @@ export default function Note() {
                   value={item.text}
                 />
               ))}
-              <ColorPicker
-                handleColor={handleColor}
-                id={note.id}
-                currentColor={note.color}
-              />
             </div>
           );
         })}

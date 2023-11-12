@@ -1,9 +1,33 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.trash {
+  width: fit-content;
+  align-self: flex-end;
+  color: darkred;
+  padding: 2px;
+  transition: all 0.5s;
+  border-radius: 50%;
+}
+
+.trash:hover {
+  background-color: darkred;
+  color: white;
+  cursor: pointer;
+}
+
 .app-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-column-gap: 10px;
-  grid-row-gap: 10px;
+  grid-row-gap: 0px;
 }
 
 .sidebar {
@@ -12,5 +36,5 @@
 }
 
 .content {
-  grid-area: 1 / 2 / 6 / 6;
+  grid-area: 1 / 2 / 5 / 6;
 }
