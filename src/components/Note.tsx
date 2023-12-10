@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ColorPicker from "./ColorPicker";
 import { nanoid } from "nanoid";
 import "../styles/Note.css";
 
-interface NoteInterface {
-  notes: {
-    text: string;
-    id: string;
-  }[];
+interface Note {
+  text: string;
+  id: string;
+}
+
+interface NoteGroup {
+  notes: Note[];
   id: string;
   color: string;
 }
 
 export default function Note() {
-  const [notes, setNotes] = useState([
+  const [notes, setNotes] = useState<NoteGroup[]>([
     {
       notes: [
         {
@@ -25,6 +27,8 @@ export default function Note() {
       color: "transparent",
     },
   ]);
+
+  const [draggedItem, setDraggedItem] = useState<{ id: string } | null>(null);
 
   function newNote() {
     const newNote = {
@@ -97,23 +101,35 @@ export default function Note() {
   }
 
   function dragHandler(e: React.DragEvent<HTMLDivElement>, id: string) {
-    // const currentIndex = notes.findIndex((note) => note.id == id);
-    // const newNotes = [
-    //   ...notes.slice(0, currentIndex),
-    //   updatedNotes,
-    //   ...notes.slice(currentIndex + 1),
-    // ];
-    // setNotes(newNotes);
-    console.log(id);
+    const dragged = notes.find((note) => note.id == id);
+    if (dragged) {
+      setDraggedItem(dragged);
+    }
   }
 
   function dropHandler(e: React.DragEvent<HTMLDivElement>, id: string) {
-    console.log(e);
+    e.preventDefault();
+
+    if (draggedItem) {
+      const draggedIndex = notes.findIndex(
+        (item) => item.id === draggedItem.id
+      );
+      const dropIndex = notes.findIndex((item) => item.id === id);
+
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        const updatedNotes = [...notes];
+        const [draggedNote] = updatedNotes.splice(draggedIndex, 1);
+        updatedNotes.splice(dropIndex, 0, draggedNote);
+
+        setNotes(updatedNotes);
+        setDraggedItem(null);
+      }
+    }
   }
 
-  useEffect(() => {
-    console.log(notes);
-  }, [notes]);
+  function dragOverHandler(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+  }
 
   return (
     <div className="note-content">
@@ -121,10 +137,13 @@ export default function Note() {
         add
       </span>
       {notes &&
-        notes.map((note: NoteInterface) => {
+        notes.map((note: NoteGroup) => {
           return (
             <div
               draggable
+              onDrag={(e) => dragHandler(e, note.id)}
+              onDrop={(e) => dropHandler(e, note.id)}
+              onDragOver={(e) => dragOverHandler(e)}
               key={note.id}
               className="note-container"
               style={{ backgroundColor: note.color }}
