@@ -100,7 +100,7 @@ export default function Note() {
     }
   }
 
-  function dragHandler(e: React.DragEvent<HTMLDivElement>, id: string) {
+  function dragHandler(id: string) {
     const dragged = notes.find((note) => note.id == id);
     if (dragged) {
       setDraggedItem(dragged);
@@ -141,7 +141,7 @@ export default function Note() {
           return (
             <div
               draggable
-              onDrag={(e) => dragHandler(e, note.id)}
+              onDrag={() => dragHandler(note.id)}
               onDrop={(e) => dropHandler(e, note.id)}
               onDragOver={(e) => dragOverHandler(e)}
               key={note.id}
